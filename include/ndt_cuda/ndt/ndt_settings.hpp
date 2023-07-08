@@ -1,5 +1,5 @@
-#ifndef NDT_CUDA_NDT_SETTINGS_HPP
-#define NDT_CUDA_NDT_SETTINGS_HPP
+#ifndef NDT_CUDA__NDT__NDT_SETTINGS_HPP_
+#define NDT_CUDA__NDT__NDT_SETTINGS_HPP_
 
 namespace ndt_cuda {
 
@@ -16,4 +16,4 @@ enum class RegularizationMethod { NONE, MIN_EIG, NORMALIZED_MIN_EIG, PLANE, FROB
 
 }  // namespace ndt_cuda
 
-#endif
+#endif  // NDT_CUDA__NDT__NDT_SETTINGS_HPP_

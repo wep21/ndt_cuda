@@ -1,5 +1,5 @@
-#ifndef NDT_CUDA_LSQ_REGISTRATION_HPP
-#define NDT_CUDA_LSQ_REGISTRATION_HPP
+#ifndef NDT_CUDA__NDT__LSQ_REGISTRATION_HPP_
+#define NDT_CUDA__NDT__LSQ_REGISTRATION_HPP_
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
@@ -59,7 +59,7 @@ public:
   virtual void clearTarget() {}
 
 protected:
-  virtual void computeTransformation(PointCloudSource& output, const Matrix4& guess) override;
+  void computeTransformation(PointCloudSource& output, const Matrix4& guess) override;
 
   bool is_converged(const Eigen::Isometry3d& delta) const;
 
@@ -84,4 +84,4 @@ protected:
 };
 }  // namespace ndt_cuda
 
-#endif
+#endif  // NDT_CUDA__NDT__LSQ_REGISTRATION_HPP_

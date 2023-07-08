@@ -1,3 +1,8 @@
+#ifndef NDT_CUDA__NDT__IMPL__LSQ_REGISTRATION_IMPL_HPP_
+#define NDT_CUDA__NDT__IMPL__LSQ_REGISTRATION_IMPL_HPP_
+
+#include <algorithm>
+
 #include <boost/format.hpp>
 #include <ndt_cuda/ndt/lsq_registration.hpp>
 #include <ndt_cuda/so3/so3.hpp>
@@ -182,3 +187,5 @@ bool LsqRegistration<PointTarget, PointSource>::step_lm(Eigen::Isometry3d& x0,
 }
 
 }  // namespace ndt_cuda
+
+#endif  // NDT_CUDA__NDT__IMPL__LSQ_REGISTRATION_IMPL_HPP_

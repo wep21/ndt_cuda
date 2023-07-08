@@ -1,5 +1,8 @@
-#ifndef NDT_CUDA_NDT_CUDA_IMPL_HPP
-#define NDT_CUDA_NDT_CUDA_IMPL_HPP
+#ifndef NDT_CUDA__NDT__IMPL__NDT_CUDA_IMPL_HPP_
+#define NDT_CUDA__NDT__IMPL__NDT_CUDA_IMPL_HPP_
+
+#include <algorithm>
+#include <vector>
 
 #include <ndt_cuda/cuda/ndt_cuda.cuh>
 #include <ndt_cuda/ndt/ndt_cuda.hpp>
@@ -99,4 +102,4 @@ double NDTCuda<PointSource, PointTarget>::compute_error(const Eigen::Isometry3d&
 
 }  // namespace ndt_cuda
 
-#endif
+#endif  // NDT_CUDA__NDT__IMPL__NDT_CUDA_IMPL_HPP_

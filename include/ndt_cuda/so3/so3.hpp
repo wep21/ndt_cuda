@@ -1,5 +1,5 @@
-#ifndef NDT_CUDA_SO3_HPP
-#define NDT_CUDA_SO3_HPP
+#ifndef NDT_CUDA__SO3__SO3_HPP_
+#define NDT_CUDA__SO3__SO3_HPP_
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
@@ -79,4 +79,4 @@ inline Eigen::Quaterniond so3_exp(const Eigen::Vector3d& omega) {
 
 }  // namespace ndt_cuda
 
-#endif
+#endif  // NDT_CUDA__SO3__SO3_HPP_

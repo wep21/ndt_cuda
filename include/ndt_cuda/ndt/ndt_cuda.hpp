@@ -1,5 +1,7 @@
-#ifndef NDT_CUDA_NDT_CUDA_HPP
-#define NDT_CUDA_NDT_CUDA_HPP
+#ifndef NDT_CUDA__NDT__NDT_CUDA_HPP_
+#define NDT_CUDA__NDT__NDT_CUDA_HPP_
+
+#include <memory>
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
@@ -43,28 +45,28 @@ protected:
 
 public:
   NDTCuda();
-  virtual ~NDTCuda() override;
+  ~NDTCuda() override;
 
   void setDistanceMode(NDTDistanceMode mode);
   void setResolution(double resolution);
   void setNeighborSearchMethod(NeighborSearchMethod method, double radius = -1.0);
 
-  virtual void swapSourceAndTarget() override;
-  virtual void clearSource() override;
-  virtual void clearTarget() override;
+  void swapSourceAndTarget() override;
+  void clearSource() override;
+  void clearTarget() override;
 
-  virtual void setInputSource(const PointCloudSourceConstPtr& cloud) override;
-  virtual void setInputTarget(const PointCloudTargetConstPtr& cloud) override;
+  void setInputSource(const PointCloudSourceConstPtr& cloud) override;
+  void setInputTarget(const PointCloudTargetConstPtr& cloud) override;
 
 protected:
-  virtual void computeTransformation(PointCloudSource& output, const Matrix4& guess) override;
-  virtual double linearize(const Eigen::Isometry3d& trans, Eigen::Matrix<double, 6, 6>* H,
+  void computeTransformation(PointCloudSource& output, const Matrix4& guess) override;
+  double linearize(const Eigen::Isometry3d& trans, Eigen::Matrix<double, 6, 6>* H,
                            Eigen::Matrix<double, 6, 1>* b) override;
-  virtual double compute_error(const Eigen::Isometry3d& trans) override;
+  double compute_error(const Eigen::Isometry3d& trans) override;
 
 protected:
   std::unique_ptr<cuda::NDTCudaCore> ndt_cuda_;
 };
 }  // namespace ndt_cuda
 
-#endif
+#endif  // NDT_CUDA__NDT__NDT_CUDA_HPP_
