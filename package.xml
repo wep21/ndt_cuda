@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>ndt_cuda</name>
+  <version>0.0.0</version>
+  <description>A collection of fast point cloud registration implementations</description>
+
+  <maintainer email="daisuke.nishimatsu1021@gmail.com">Daisuke Nishimatsu</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>cmake</buildtool_depend>
+
+  <depend>libpcl-all-dev</depend>
+  <depend>eigen</depend>
+
+  <export>
+    <build_type>cmake</build_type>
+  </export>
+</package>
