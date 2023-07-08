@@ -3,13 +3,12 @@
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
-
-#include <pcl/point_types.h>
-#include <pcl/point_cloud.h>
-#include <pcl/search/kdtree.h>
-#include <pcl/registration/registration.h>
 #include <ndt_cuda/ndt/lsq_registration.hpp>
 #include <ndt_cuda/ndt/ndt_settings.hpp>
+#include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
+#include <pcl/registration/registration.h>
+#include <pcl/search/kdtree.h>
 
 namespace ndt_cuda {
 
@@ -23,11 +22,13 @@ public:
   using Scalar = float;
   using Matrix4 = typename pcl::Registration<PointSource, PointTarget, Scalar>::Matrix4;
 
-  using PointCloudSource = typename pcl::Registration<PointSource, PointTarget, Scalar>::PointCloudSource;
+  using PointCloudSource =
+    typename pcl::Registration<PointSource, PointTarget, Scalar>::PointCloudSource;
   using PointCloudSourcePtr = typename PointCloudSource::Ptr;
   using PointCloudSourceConstPtr = typename PointCloudSource::ConstPtr;
 
-  using PointCloudTarget = typename pcl::Registration<PointSource, PointTarget, Scalar>::PointCloudTarget;
+  using PointCloudTarget =
+    typename pcl::Registration<PointSource, PointTarget, Scalar>::PointCloudTarget;
   using PointCloudTargetPtr = typename PointCloudTarget::Ptr;
   using PointCloudTargetConstPtr = typename PointCloudTarget::ConstPtr;
 
@@ -57,7 +58,8 @@ public:
 
 protected:
   virtual void computeTransformation(PointCloudSource& output, const Matrix4& guess) override;
-  virtual double linearize(const Eigen::Isometry3d& trans, Eigen::Matrix<double, 6, 6>* H, Eigen::Matrix<double, 6, 1>* b) override;
+  virtual double linearize(const Eigen::Isometry3d& trans, Eigen::Matrix<double, 6, 6>* H,
+                           Eigen::Matrix<double, 6, 1>* b) override;
   virtual double compute_error(const Eigen::Isometry3d& trans) override;
 
 protected:

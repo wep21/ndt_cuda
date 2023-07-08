@@ -1,14 +1,14 @@
 #ifndef NDT_CUDA_NDT_CUDA_IMPL_HPP
 #define NDT_CUDA_NDT_CUDA_IMPL_HPP
 
-#include <ndt_cuda/ndt/ndt_cuda.hpp>
-
 #include <ndt_cuda/cuda/ndt_cuda.cuh>
+#include <ndt_cuda/ndt/ndt_cuda.hpp>
 
 namespace ndt_cuda {
 
 template <typename PointSource, typename PointTarget>
-NDTCuda<PointSource, PointTarget>::NDTCuda() : LsqRegistration<PointSource, PointTarget>() {
+NDTCuda<PointSource, PointTarget>::NDTCuda()
+    : LsqRegistration<PointSource, PointTarget>() {
   this->reg_name_ = "NDTCuda";
   ndt_cuda_.reset(new cuda::NDTCudaCore());
 }
@@ -27,7 +27,8 @@ void NDTCuda<PointSource, PointTarget>::setResolution(double resolution) {
 }
 
 template <typename PointSource, typename PointTarget>
-void NDTCuda<PointSource, PointTarget>::setNeighborSearchMethod(NeighborSearchMethod method, double radius) {
+void NDTCuda<PointSource, PointTarget>::setNeighborSearchMethod(NeighborSearchMethod method,
+                                                                double radius) {
   ndt_cuda_->set_neighbor_search_method(method, radius);
 }
 
@@ -55,7 +56,9 @@ void NDTCuda<PointSource, PointTarget>::setInputSource(const PointCloudSourceCon
   pcl::Registration<PointSource, PointTarget, Scalar>::setInputSource(cloud);
 
   std::vector<Eigen::Vector3f, Eigen::aligned_allocator<Eigen::Vector3f>> points(cloud->size());
-  std::transform(cloud->begin(), cloud->end(), points.begin(), [=](const PointSource& pt) { return pt.getVector3fMap(); });
+  std::transform(cloud->begin(), cloud->end(), points.begin(), [=](const PointSource& pt) {
+    return pt.getVector3fMap();
+  });
   ndt_cuda_->set_source_cloud(points);
 }
 
@@ -68,18 +71,23 @@ void NDTCuda<PointSource, PointTarget>::setInputTarget(const PointCloudTargetCon
   pcl::Registration<PointSource, PointTarget, Scalar>::setInputTarget(cloud);
 
   std::vector<Eigen::Vector3f, Eigen::aligned_allocator<Eigen::Vector3f>> points(cloud->size());
-  std::transform(cloud->begin(), cloud->end(), points.begin(), [=](const PointTarget& pt) { return pt.getVector3fMap(); });
+  std::transform(cloud->begin(), cloud->end(), points.begin(), [=](const PointTarget& pt) {
+    return pt.getVector3fMap();
+  });
   ndt_cuda_->set_target_cloud(points);
 }
 
 template <typename PointSource, typename PointTarget>
-void NDTCuda<PointSource, PointTarget>::computeTransformation(PointCloudSource& output, const Matrix4& guess) {
+void NDTCuda<PointSource, PointTarget>::computeTransformation(PointCloudSource& output,
+                                                              const Matrix4& guess) {
   ndt_cuda_->create_voxelmaps();
   LsqRegistration<PointSource, PointTarget>::computeTransformation(output, guess);
 }
 
 template <typename PointSource, typename PointTarget>
-double NDTCuda<PointSource, PointTarget>::linearize(const Eigen::Isometry3d& trans, Eigen::Matrix<double, 6, 6>* H, Eigen::Matrix<double, 6, 1>* b) {
+double NDTCuda<PointSource, PointTarget>::linearize(const Eigen::Isometry3d& trans,
+                                                    Eigen::Matrix<double, 6, 6>* H,
+                                                    Eigen::Matrix<double, 6, 1>* b) {
   ndt_cuda_->update_correspondences(trans);
   return ndt_cuda_->compute_error(trans, H, b);
 }

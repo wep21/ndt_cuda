@@ -61,7 +61,7 @@ inline Eigen::Quaterniond so3_exp(const Eigen::Vector3d& omega) {
   double theta;
   double imag_factor;
   double real_factor;
-  if(theta_sq < 1e-10) {
+  if (theta_sq < 1e-10) {
     theta = 0;
     double theta_quad = theta_sq * theta_sq;
     imag_factor = 0.5 - 1.0 / 48.0 * theta_sq + 1.0 / 3840.0 * theta_quad;
@@ -73,7 +73,8 @@ inline Eigen::Quaterniond so3_exp(const Eigen::Vector3d& omega) {
     real_factor = std::cos(half_theta);
   }
 
-  return Eigen::Quaterniond(real_factor, imag_factor * omega.x(), imag_factor * omega.y(), imag_factor * omega.z());
+  return Eigen::Quaterniond(real_factor, imag_factor * omega.x(), imag_factor * omega.y(),
+                            imag_factor * omega.z());
 }
 
 }  // namespace ndt_cuda

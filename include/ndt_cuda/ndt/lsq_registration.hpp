@@ -3,26 +3,27 @@
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
-
-#include <pcl/point_types.h>
 #include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
 #include <pcl/registration/registration.h>
 
 namespace ndt_cuda {
 
 enum class LSQ_OPTIMIZER_TYPE { GaussNewton, LevenbergMarquardt };
 
-template<typename PointSource, typename PointTarget>
+template <typename PointSource, typename PointTarget>
 class LsqRegistration : public pcl::Registration<PointSource, PointTarget, float> {
 public:
   using Scalar = float;
   using Matrix4 = typename pcl::Registration<PointSource, PointTarget, Scalar>::Matrix4;
 
-  using PointCloudSource = typename pcl::Registration<PointSource, PointTarget, Scalar>::PointCloudSource;
+  using PointCloudSource =
+    typename pcl::Registration<PointSource, PointTarget, Scalar>::PointCloudSource;
   using PointCloudSourcePtr = typename PointCloudSource::Ptr;
   using PointCloudSourceConstPtr = typename PointCloudSource::ConstPtr;
 
-  using PointCloudTarget = typename pcl::Registration<PointSource, PointTarget, Scalar>::PointCloudTarget;
+  using PointCloudTarget =
+    typename pcl::Registration<PointSource, PointTarget, Scalar>::PointCloudTarget;
   using PointCloudTargetPtr = typename PointCloudTarget::Ptr;
   using PointCloudTargetConstPtr = typename PointCloudTarget::ConstPtr;
 
@@ -49,7 +50,9 @@ public:
 
   const Eigen::Matrix<double, 6, 6>& getFinalHessian() const;
 
-  double evaluateCost(const Eigen::Matrix4f& relative_pose, Eigen::Matrix<double, 6, 6>* H = nullptr, Eigen::Matrix<double, 6, 1>* b = nullptr);
+  double evaluateCost(const Eigen::Matrix4f& relative_pose,
+                      Eigen::Matrix<double, 6, 6>* H = nullptr,
+                      Eigen::Matrix<double, 6, 1>* b = nullptr);
 
   virtual void swapSourceAndTarget() {}
   virtual void clearSource() {}
@@ -60,7 +63,8 @@ protected:
 
   bool is_converged(const Eigen::Isometry3d& delta) const;
 
-  virtual double linearize(const Eigen::Isometry3d& trans, Eigen::Matrix<double, 6, 6>* H = nullptr, Eigen::Matrix<double, 6, 1>* b = nullptr) = 0;
+  virtual double linearize(const Eigen::Isometry3d& trans, Eigen::Matrix<double, 6, 6>* H = nullptr,
+                           Eigen::Matrix<double, 6, 1>* b = nullptr) = 0;
   virtual double compute_error(const Eigen::Isometry3d& trans) = 0;
 
   bool step_optimize(Eigen::Isometry3d& x0, Eigen::Isometry3d& delta);

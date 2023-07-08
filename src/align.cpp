@@ -1,17 +1,17 @@
 #include <chrono>
 #include <iostream>
 
-#include <pcl/io/pcd_io.h>
-#include <pcl/point_types.h>
-#include <pcl/point_cloud.h>
+#include <ndt_cuda/ndt/ndt_cuda.hpp>
 #include <pcl/common/transforms.h>
 #include <pcl/filters/approximate_voxel_grid.h>
-
-#include <ndt_cuda/ndt/ndt_cuda.hpp>
+#include <pcl/io/pcd_io.h>
+#include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
 
 // benchmark for ndt_cuda registration methods
 template <typename Registration>
-void test(Registration& reg, const pcl::PointCloud<pcl::PointXYZ>::ConstPtr& target, const pcl::PointCloud<pcl::PointXYZ>::ConstPtr& source) {
+void test(Registration& reg, const pcl::PointCloud<pcl::PointXYZ>::ConstPtr& target,
+          const pcl::PointCloud<pcl::PointXYZ>::ConstPtr& source) {
   pcl::PointCloud<pcl::PointXYZ>::Ptr aligned(new pcl::PointCloud<pcl::PointXYZ>);
 
   double fitness_score = 0.0;
@@ -87,12 +87,16 @@ int main(int argc, char** argv) {
   }
 
   // remove invalid points around origin
-  source_cloud->erase(
-    std::remove_if(source_cloud->begin(), source_cloud->end(), [=](const pcl::PointXYZ& pt) { return pt.getVector3fMap().squaredNorm() < 1e-3; }),
-    source_cloud->end());
-  target_cloud->erase(
-    std::remove_if(target_cloud->begin(), target_cloud->end(), [=](const pcl::PointXYZ& pt) { return pt.getVector3fMap().squaredNorm() < 1e-3; }),
-    target_cloud->end());
+  source_cloud->erase(std::remove_if(source_cloud->begin(), source_cloud->end(),
+                                     [=](const pcl::PointXYZ& pt) {
+                                       return pt.getVector3fMap().squaredNorm() < 1e-3;
+                                     }),
+                      source_cloud->end());
+  target_cloud->erase(std::remove_if(target_cloud->begin(), target_cloud->end(),
+                                     [=](const pcl::PointXYZ& pt) {
+                                       return pt.getVector3fMap().squaredNorm() < 1e-3;
+                                     }),
+                      target_cloud->end());
 
   // downsampling
   pcl::ApproximateVoxelGrid<pcl::PointXYZ> voxelgrid;
@@ -108,7 +112,8 @@ int main(int argc, char** argv) {
   voxelgrid.filter(*filtered);
   source_cloud = filtered;
 
-  std::cout << "target:" << target_cloud->size() << "[pts] source:" << source_cloud->size() << "[pts]" << std::endl;
+  std::cout << "target:" << target_cloud->size() << "[pts] source:" << source_cloud->size()
+            << "[pts]" << std::endl;
 
   std::cout << "--- ndt_cuda (P2D) ---" << std::endl;
   ndt_cuda::NDTCuda<pcl::PointXYZ, pcl::PointXYZ> ndt_cuda;

@@ -1,6 +1,5 @@
-#include <ndt_cuda/ndt/lsq_registration.hpp>
-
 #include <boost/format.hpp>
+#include <ndt_cuda/ndt/lsq_registration.hpp>
 #include <ndt_cuda/so3/so3.hpp>
 
 namespace ndt_cuda {
@@ -40,17 +39,21 @@ void LsqRegistration<PointTarget, PointSource>::setDebugPrint(bool lm_debug_prin
 }
 
 template <typename PointTarget, typename PointSource>
-const Eigen::Matrix<double, 6, 6>& LsqRegistration<PointTarget, PointSource>::getFinalHessian() const {
+const Eigen::Matrix<double, 6, 6>& LsqRegistration<PointTarget, PointSource>::getFinalHessian()
+  const {
   return final_hessian_;
 }
 
 template <typename PointTarget, typename PointSource>
-double LsqRegistration<PointTarget, PointSource>::evaluateCost(const Eigen::Matrix4f& relative_pose, Eigen::Matrix<double, 6, 6>* H, Eigen::Matrix<double, 6, 1>* b) {
+double LsqRegistration<PointTarget, PointSource>::evaluateCost(const Eigen::Matrix4f& relative_pose,
+                                                               Eigen::Matrix<double, 6, 6>* H,
+                                                               Eigen::Matrix<double, 6, 1>* b) {
   return this->linearize(Eigen::Isometry3f(relative_pose).cast<double>(), H, b);
 }
 
 template <typename PointTarget, typename PointSource>
-void LsqRegistration<PointTarget, PointSource>::computeTransformation(PointCloudSource& output, const Matrix4& guess) {
+void LsqRegistration<PointTarget, PointSource>::computeTransformation(PointCloudSource& output,
+                                                                      const Matrix4& guess) {
   Eigen::Isometry3d x0 = Eigen::Isometry3d(guess.template cast<double>());
 
   lm_lambda_ = -1.0;
@@ -91,7 +94,8 @@ bool LsqRegistration<PointTarget, PointSource>::is_converged(const Eigen::Isomet
 }
 
 template <typename PointTarget, typename PointSource>
-bool LsqRegistration<PointTarget, PointSource>::step_optimize(Eigen::Isometry3d& x0, Eigen::Isometry3d& delta) {
+bool LsqRegistration<PointTarget, PointSource>::step_optimize(Eigen::Isometry3d& x0,
+                                                              Eigen::Isometry3d& delta) {
   switch (lsq_optimizer_type_) {
     case LSQ_OPTIMIZER_TYPE::LevenbergMarquardt:
       return step_lm(x0, delta);
@@ -103,7 +107,8 @@ bool LsqRegistration<PointTarget, PointSource>::step_optimize(Eigen::Isometry3d&
 }
 
 template <typename PointTarget, typename PointSource>
-bool LsqRegistration<PointTarget, PointSource>::step_gn(Eigen::Isometry3d& x0, Eigen::Isometry3d& delta) {
+bool LsqRegistration<PointTarget, PointSource>::step_gn(Eigen::Isometry3d& x0,
+                                                        Eigen::Isometry3d& delta) {
   Eigen::Matrix<double, 6, 6> H;
   Eigen::Matrix<double, 6, 1> b;
   double y0 = linearize(x0, &H, &b);
@@ -122,7 +127,8 @@ bool LsqRegistration<PointTarget, PointSource>::step_gn(Eigen::Isometry3d& x0, E
 }
 
 template <typename PointTarget, typename PointSource>
-bool LsqRegistration<PointTarget, PointSource>::step_lm(Eigen::Isometry3d& x0, Eigen::Isometry3d& delta) {
+bool LsqRegistration<PointTarget, PointSource>::step_lm(Eigen::Isometry3d& x0,
+                                                        Eigen::Isometry3d& delta) {
   Eigen::Matrix<double, 6, 6> H;
   Eigen::Matrix<double, 6, 1> b;
   double y0 = linearize(x0, &H, &b);
@@ -133,7 +139,8 @@ bool LsqRegistration<PointTarget, PointSource>::step_lm(Eigen::Isometry3d& x0, E
 
   double nu = 2.0;
   for (int i = 0; i < lm_max_iterations_; i++) {
-    Eigen::LDLT<Eigen::Matrix<double, 6, 6>> solver(H + lm_lambda_ * Eigen::Matrix<double, 6, 6>::Identity());
+    Eigen::LDLT<Eigen::Matrix<double, 6, 6>> solver(H + lm_lambda_ *
+                                                          Eigen::Matrix<double, 6, 6>::Identity());
     Eigen::Matrix<double, 6, 1> d = solver.solve(-b);
 
     delta.setIdentity();
@@ -146,10 +153,13 @@ bool LsqRegistration<PointTarget, PointSource>::step_lm(Eigen::Isometry3d& x0, E
 
     if (lm_debug_print_) {
       if (i == 0) {
-        std::cout << boost::format("--- LM optimization ---\n%5s %15s %15s %15s %15s %15s %5s\n") % "i" % "y0" % "yi" % "rho" % "lambda" % "|delta|" % "dec";
+        std::cout << boost::format("--- LM optimization ---\n%5s %15s %15s %15s %15s %15s %5s\n") %
+                       "i" % "y0" % "yi" % "rho" % "lambda" % "|delta|" % "dec";
       }
       char dec = rho > 0.0 ? 'x' : ' ';
-      std::cout << boost::format("%5d %15g %15g %15g %15g %15g %5c") % i % y0 % yi % rho % lm_lambda_ % d.norm() % dec << std::endl;
+      std::cout << boost::format("%5d %15g %15g %15g %15g %15g %5c") % i % y0 % yi % rho %
+                     lm_lambda_ % d.norm() % dec
+                << std::endl;
     }
 
     if (rho < 0) {
